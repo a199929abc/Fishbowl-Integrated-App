@@ -1,13 +1,18 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.application.Platform;
+
+import javafx.event.ActionEvent;
+import javafx.scene.control.PasswordField;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
@@ -20,40 +25,47 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileSystemView;
+import javafx.application.Application;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.xmlbeans.*;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *  Hello world!
  *
  */
-public class App {
-
+public class App extends Application{
+    public static String userName;
+    public static String passWord;
     public static final String IA_NAME = "Java Sample";
     public static final String IA_DESC = "Sample of Java Fishbowl connection";
     public static final int IA_KEY = 54321;
     public static String ticketKey;
     private static SAXBuilder builder = new SAXBuilder();
+    private static String hostName="universityofvictoria.myfishbowl.com";
+    private static int port=28192;
 
     public static void main(String[] args) {
-        Connection connection = new Connection("universityofvictoria.myfishbowl.com", 28192);
-        // Create login XML request and send to the server
-        String loginRequest = Requests.loginRequest("mtcelec2", "a");
+        System.out.println( "Hello World!" );
+        launch();//UI
 
+        Connection connection = new Connection(hostName, port);
+        // Create login XML request and send to the server
+        String loginRequest = Requests.loginRequest(App.userName,App.passWord);
         String response = connection.sendRequest(loginRequest);
         if (response == null) {
             connection.disconnect();
             System.exit(1);
         }
-
         // Parse response
         Document document = null;
         try {
@@ -74,42 +86,16 @@ public class App {
         // Login successful, store the key
         ticketKey = root.getChild("Ticket").getChild("Key").getValue();
         Element node = null;
-        String getSOListRequest =Requests.getPart(21689);
-        response = connection.sendRequest(getSOListRequest);
-        System.out.println(response);
+        /**
+         * Request Setup
+         *
+         *
+         *
+         *
+         * process the excel sheet and write to new file
+         * **/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        String path = "C:\\Users\\kai\\Desktop\\RecoveryTemplate.xlsx";
+        String path = "C:\\Users\\kai\\Desktop\\RecoveryTemplate.xlsx";//ui
  try{
      //创建工作簿
      FileInputStream  is=new FileInputStream(path);
@@ -119,7 +105,8 @@ public class App {
      int max_row =reader.maxRow();
      int realMaxRow=0;
     // int title =reader.getMapTitle("Serial #");get mapping title
-
+     excelWriter ew= new excelWriter(path,"name");
+     ew.write_header();
      for(int i =1;i<max_row;i++){
          ArrayList collect = reader.processRow(i);
          if(collect.get(0)==null&&collect.get(1)==null&&collect.get(2)==null){
@@ -127,34 +114,127 @@ public class App {
              realMaxRow=i;
              break;
 
+         }if(collect.get(2)!=null){
+             BigInteger partid = new BigDecimal(collect.get(2).toString()).toBigInteger();
+             String getPart =Requests.get_part(partid);
+             response = connection.sendRequest(getPart);
+             String result = getDescription(response);
+             //System.out.println(result.substring( 0,result.indexOf("SN:")-2));//insname
+             //System.out.println(result.substring(result.indexOf("SN:")+4,result.indexOf("DI")));//SN
+             //System.out.println(result.substring(result.indexOf("DI")+4));//DI
+             ArrayList<String> rowFill = new ArrayList<String>();
+
+             rowFill.add(result.substring( 0,result.indexOf("SN:")-2));
+             rowFill.add(result.substring(result.indexOf("SN:")+4,result.indexOf("DI")).replace(",",""));
+             rowFill.add(result.substring(result.indexOf("DI")+4).replace(",",""));
+             rowFill.add(partid.toString().replace(",",""));
+             rowFill.add("Instrument Receiving");
+             rowFill.add("Test and Development");
+             rowFill.add("");
+             rowFill.add("");
+             rowFill.add("");
+             ew.write_row(rowFill,i);
+         }//get description
          }
-         System.out.println(collect);
-     }
-     // Create an ArrayList object
-     excelWriter ew= new excelWriter(path,"name");
-     ew.write_header();
-     for(int i=1;i<realMaxRow;i++){
-       ArrayList<String> rowFill = new ArrayList<String>();
-         rowFill.add("a");
-         rowFill.add("a");
-         rowFill.add("a");
-         rowFill.add("a");
-         rowFill.add("Instrument Receiving");
-         rowFill.add("Test and Development");
-         rowFill.add("");
-         rowFill.add("");
-         rowFill.add("");
-         ew.write_row(rowFill,i);
-     }
      ew.create_excel("C:\\Users\\kai\\Desktop\\output.xlsx");
+
+
 
 
 
  }catch(IOException e){
      e.printStackTrace();
  }
-    }  private static Document parseXml(String xml) throws IOException, JDOMException {
+    }
+    private static Document parseXml(String xml) throws IOException, JDOMException {
         return builder.build(new InputSource(new StringReader(xml)));
     }
+    private static String getDescription(String response){
+        String result = response.substring(response.indexOf("<Description>")+13,response.indexOf("</Description>"));
+        return result;
+    }
 
-}
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+     primaryStage.setTitle("Login");//https://blog.csdn.net/guanguoxiang/article/details/45461879
+     GridPane grid =new GridPane();
+     grid.setAlignment(Pos.CENTER);
+     grid.setHgap(10);
+     grid.setVgap(10);
+     grid.setPadding(new Insets(25,25,25,25));
+     Scene sence =new Scene(grid,350,275);
+
+
+    Text scenetitle = new Text("Login Fishbowl ");
+    scenetitle.setFont(Font.font(20));
+    grid.add(scenetitle, 0, 0, 2, 1);
+
+
+
+    Label username = new Label("User Name:");
+    grid.add(username, 0, 1);
+    username.setFont(Font.font(13));
+
+
+    TextField userTextField = new TextField();
+    grid.add(userTextField, 1, 1);
+
+    Label pw = new Label("Password:");
+    pw.setFont(Font.font(13));
+    grid.add(pw, 0, 2);
+
+    PasswordField pwBox = new PasswordField();
+    grid.add(pwBox, 1, 2);
+
+    Button btn_login = new Button("Sign in");
+    HBox hbBtn = new HBox(10);
+
+    hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+    hbBtn.getChildren().add(btn_login);
+    grid.add(hbBtn, 1, 4);
+    Text actiontarget = new Text();
+    actiontarget.setFont(Font.font(13));
+    grid.add(actiontarget, 1, 6);
+
+    btn_login.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent event) {
+            actiontarget.setFill(Color.RED);
+            actiontarget.setText("Connecting to server . . . . . . ");
+            userName=userTextField.getText();
+            passWord=pwBox.getText();
+            Connection connection = new Connection(hostName, port);
+            // Create login XML request and send to the server
+            String loginRequest = Requests.loginRequest(App.userName,App.passWord);
+            String response = connection.sendRequest(loginRequest);
+            // Parse response
+            Document document = null;
+            try {
+                document = parseXml(response);
+            } catch (Exception e) {
+                System.out.println("Cannot parse the xml response.");
+                connection.disconnect();
+                System.exit(1);
+            }
+            Element root = document.getRootElement();
+            String statusCode = root.getChild("FbiMsgsRs").getAttribute("statusCode").getValue();
+
+            if (statusCode.equals("1000")) {
+                //connection build
+                primaryStage.close();
+            }else{
+               App.infoBox("username and password doesn't match with system ", "Login Error");
+            }
+
+        }
+    });
+    primaryStage.setScene(sence);
+    primaryStage.show();
+    }
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
+    }
+

@@ -7,6 +7,7 @@ import com.sun.xml.messaging.saaj.packaging.mime.internet.MimeUtility;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -54,7 +55,7 @@ public class Requests {
 
         return xml;
     }
-public static String getPart(int partId){
+public static String get_part(BigInteger partId){
         String xml="<FbiXml>" +
     "<Ticket>"+
     "<Key>"+App.ticketKey+"</Key>"+
