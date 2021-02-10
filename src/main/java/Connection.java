@@ -105,7 +105,6 @@ public class Connection {
             msg = msg + line + "\n";
         }
         br.close();
-
         return msg;
     }
 }
