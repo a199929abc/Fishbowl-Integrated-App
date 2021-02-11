@@ -17,6 +17,8 @@ import java.util.Map;
 import static org.apache.poi.ss.usermodel.CellType.BLANK;
 import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 import static org.apache.poi.ss.usermodel.CellType.STRING;
+
+
 public class excelReader {
     private FileInputStream inputstream;
     private XSSFWorkbook xssfWorkbook;
@@ -32,6 +34,10 @@ public class excelReader {
 
     }
 
+    /**
+     *
+     * @param is
+     */
     public void read(FileInputStream is) {
         try {
             this.xssfWorkbook = new XSSFWorkbook(is);
@@ -43,15 +49,31 @@ public class excelReader {
         }
     }
 
+    /**
+     *
+     * @return maxRow of the sheet
+     */
     public int maxRow() {
         this.maxRow = this.sheet.getLastRowNum();
         return this.maxRow;
     }
 
+    /**
+     *
+     * @return max column number of the sheet
+     */
+
     public int maxColumn() {
         this.maxColumn = this.titleRow.getLastCellNum();
         return this.maxColumn;
     }
+
+    /**
+     *
+     * @param row_num
+     * @param column_num
+     * @return cell data
+     */
 
     public String get_Cell(int row_num, int column_num) {
         String cell = new String();
@@ -59,6 +81,10 @@ public class excelReader {
         XSSFCell cell0 = row.getCell(column_num);
         return cell;
     }
+
+    /**
+     * mappingTitle to column
+     */
     public void mappingTitle(){
          this.mapTitle= new HashMap<String,Integer>();
         XSSFRow row = this.sheet.getRow(0);//Create map
@@ -78,11 +104,22 @@ public class excelReader {
             colIx++;//add the cell contents (name of column) and cell index to the map
         }//int idx = map.get("ColumnName");
 
-    }public int getMapTitle(String columnName){
+    }
+
+    /**
+     *
+     * @param columnName
+     * @return get map title
+     */
+    public int getMapTitle(String columnName){
         return this.mapTitle.get(columnName);
+    }
 
-
-    }public ArrayList storeSheet(){
+    /**
+     *
+     * @return Store the entire sheet row by row
+     */
+    public ArrayList storeSheet(){
         this.collection_list = new ArrayList<ArrayList<String>>();
         //process each row
         for (int i=1; i<this.sheet.getPhysicalNumberOfRows();i++){
@@ -108,7 +145,14 @@ public class excelReader {
             this.collection_list.add(temp_row_list);
         }
         return this.collection_list;
-    }public ArrayList processRow(int rowNum){
+    }
+
+    /**
+     *
+     * @param rowNum
+     * @return Arraylist of the SN,DI,Instrument name
+     */
+    public ArrayList processRow(int rowNum){
         Row row =this.sheet.getRow(rowNum);
         ArrayList<String> temp_row_list = new ArrayList<String>();
         for (int k = 1; k < 4; k++) {

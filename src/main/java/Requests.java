@@ -68,6 +68,20 @@ public static String get_part(BigInteger partId){
     "</FbiXml>";
 return xml;
 }
+public static String get_partToo(BigInteger partId){
+        String xml="<FbiXml>"+
+    "<Ticket>"+
+    "<Key>"+App.ticketKey+"</Key>"+
+    "</Ticket>"+
+    "<FbiMsgsRq>"+
+    "<PartQueryRq>"+
+    "<PartNum>"+partId+"</PartNum>"+
+    "</PartQueryRq>"+
+    "</FbiMsgsRq>"+
+    "</FbiXml>";
+        return xml;
+
+}
     /**
      * Encrypts the password that will be sent to the server.
      * @param password the password to be encrypted

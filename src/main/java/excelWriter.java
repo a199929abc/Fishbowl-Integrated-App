@@ -34,6 +34,12 @@ public class excelWriter {
 
     }
 
+    /**
+     * Write single row of the sheet
+     * @param writeStrings
+     * @param rowNum
+     */
+
     public void write_row(ArrayList<String> writeStrings, int rowNum) {
         XSSFRow row = this.sheet.createRow(rowNum);
         for (int i = 0; i < writeStrings.size(); i++) {
@@ -43,18 +49,26 @@ public class excelWriter {
 
     }
 
+    /**
+     * Call after write row and create excel File
+     * @param outPath
+     */
     public void create_excel(String outPath) {
         try {
             this.out = new FileOutputStream(outPath);
             this.workbook.write(this.out);
             this.out.flush();
-            System.out.println("成功创建excel文件");
+            System.out.println("Excel process completed！");
             this.out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
+    /**
+     * Write header to default
+     */
     public void write_header(){
         this.header.add("Instrument");
         this.header.add("Serial #");
@@ -70,6 +84,7 @@ public class excelWriter {
             XSSFCell cell = row.createCell(i);
             cell.setCellValue(this.header.get(i));
         }
+        //combine column E and Column F
         this.sheet.addMergedRegion(new CellRangeAddress(0,0,4,5));
 
     }

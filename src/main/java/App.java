@@ -43,28 +43,26 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+
 public class App extends Application {
-    public static String userName;
-    public static String passWord;
-    public static final String IA_NAME = "Java Sample";
+    public static String fileName;
+    public static String userName;// username
+    public static String passWord;// password
+    public static final String IA_NAME = "Java Sample"; //API name
     public static final String IA_DESC = "Sample of Java Fishbowl connection";
-    public static final int IA_KEY = 54321;
+    public static final int IA_KEY = 54321;//Default key
     public static String ticketKey;
-    public static String path;
+    public static String path;// file path
     private static SAXBuilder builder = new SAXBuilder();
     private static String hostName = "universityofvictoria.myfishbowl.com";
     private static int port = 28192;
 
-
     public static void main(String[] args) {
-
         launch();//UI
 
         Connection connection = new Connection(hostName, port);
-
         // Create login XML request and send to the server
         String loginRequest = Requests.loginRequest(App.userName,App.passWord);
-
         String response = connection.sendRequest(loginRequest);
         if (response == null) {
             connection.disconnect();
@@ -87,21 +85,14 @@ public class App extends Application {
             System.out.println("The integrated application needs to be approved.");
             connection.disconnect();
             System.exit(0);
-
         }
         // Login successful, store the key
-
-
         ticketKey = root.getChild("Ticket").getChild("Key").getValue();
         Element node = null;
         /**
          * Request Setup
-         *
-         *
-         *
-         *
          * process the excel sheet and write to new file
-         * **/
+         **/
 
         try {
             //创建工作簿
@@ -109,40 +100,133 @@ public class App extends Application {
             excelReader reader = new excelReader(is);
             reader.read(is);
             int max_row = reader.maxRow();
-            int realMaxRow = 0;
+
             // int title =reader.getMapTitle("Serial #");get mapping title
             excelWriter ew = new excelWriter(path, "name");
+            //Writing Header to the sheet
             ew.write_header();
             for (int i = 1; i < max_row; i++) {
                 ArrayList collect = reader.processRow(i);
                 if (collect.get(0) == null && collect.get(1) == null && collect.get(2) == null) {
                     System.out.println("Process have completed！");
-                    realMaxRow = i;
                     break;
 
                 }
                 if (collect.get(2) != null) {
                     BigInteger partid = new BigDecimal(collect.get(2).toString()).toBigInteger();
+                    //get Part XML format
                     String getPart = Requests.get_part(partid);
+                    //connect to API and get response back
                     response = connection.sendRequest(getPart);
+                    //get Description String
                     String result = getDescription(response);
+
+                    String getNewpart=Requests.get_partToo(partid);
+                    String newResponse =connection.sendRequest(getNewpart);
+
+                    System.out.println(partid);
+
+                    if(result.indexOf("DI")!=-1 || result.indexOf("SN")!=-1){
+                        if(result.indexOf("DI")!=-1 && result.indexOf("SN")==-1){//DI
+                            //System.out.println(result+"ONLY DI"+"1");
+                            String message =formatString(" ",
+                                    ("DI:"+result.substring(0, result.indexOf("DI") - 1)),
+                                    ("MTC: "+partid.toString()));
+
+                            String temp= result.substring(result.indexOf("DI")+3);
+                            ArrayList<String> rowFill = new ArrayList<String>();
+                            rowFill.add(result.substring(0, result.indexOf("DI") - 1));//Instrument
+                            rowFill.add(" ");//Serial Number
+                            rowFill.add(temp.substring(0,temp.indexOf(" ")));//DI
+                            rowFill.add(partid.toString().replace(",", ""));
+                            rowFill.add("Instrument Receiving");
+                            rowFill.add("Test and Development");
+                            rowFill.add("");
+                            rowFill.add("");
+                            rowFill.add(message);
+                            ew.write_row(rowFill, i);
+                        }else if(result.indexOf("DI")==-1 && result.indexOf("SN")!=-1){
+                            //SN
+                            //System.out.println(result.substring(0, result.indexOf("SN") - 1));
+                            String temp= result.substring(result.indexOf("SN")+3);
+                            String message =formatString(("SN:"+temp.substring(0,temp.indexOf(" "))),
+                                   " ",("MTC: "+ partid.toString()));
+                            //System.out.println(result.substring(0,b.indexOf(" ")));
+                            ArrayList<String> rowFill = new ArrayList<String>();
+                            rowFill.add(result.substring(0, result.indexOf("SN") - 1));//Instrument
+                            rowFill.add(temp.substring(0,temp.indexOf(" ")));//Serial Number
+                            rowFill.add(" ");//DI
+                            rowFill.add(partid.toString().replace(",", ""));
+                            rowFill.add("Instrument Receiving");
+                            rowFill.add("Test and Development");
+                            rowFill.add("");
+                            rowFill.add("");
+                            rowFill.add(message);
+                            ew.write_row(rowFill, i);
+                        }else{
+                            int indexSN =result.indexOf("SN");
+                            int indexDI =result.indexOf("DI");
+
+                            //SN and DI
+                            if(indexSN<indexDI){//SN is in the front of DI
+                                ArrayList<String> rowFill = new ArrayList<String>();
+
+
+                                String message =formatString(("SN: "+result.substring(result.indexOf("SN") + 3, result.indexOf("DI"))),
+                                        ("DI:" + result.substring(result.indexOf("DI") + 3))
+                                        , ("MTC: "+partid.toString()));
+
+
+                                rowFill.add(result.substring(0, result.indexOf("SN:") - 2));
+                                rowFill.add(result.substring(result.indexOf("SN") + 3, result.indexOf("DI")).replace(",", ""));
+                                rowFill.add(result.substring(result.indexOf("DI") + 3).replace(",", ""));
+                                rowFill.add(partid.toString().replace(",", ""));
+                                rowFill.add("Instrument Receiving");
+                                rowFill.add("Test and Development");
+                                rowFill.add("");
+                                rowFill.add("");
+                                rowFill.add(message);
+                                ew.write_row(rowFill, i);
+                            }else{//DI is in the front of SN
+
+                                String message =formatString(("SN: "+result.substring(result.indexOf("SN") + 3)),
+                                        ("DI: "+result.substring(result.indexOf("DI") + 3, result.indexOf("SN")))
+                                        ,("MTC: "+partid.toString()));
+
+                                ArrayList<String> rowFill = new ArrayList<String>();
+                                rowFill.add(result.substring(0, result.indexOf("DI") - 2));
+                                rowFill.add(result.substring(result.indexOf("SN") + 3).replace(",", ""));
+                                rowFill.add(result.substring(result.indexOf("DI") + 3, result.indexOf("SN")).replace(",", ""));
+                                rowFill.add(partid.toString().replace(",", ""));
+                                rowFill.add("Instrument Receiving");
+                                rowFill.add("Test and Development");
+                                rowFill.add("");
+                                rowFill.add("");
+                                rowFill.add(message);
+                                ew.write_row(rowFill, i);
+                            }
+                        }
+                    }else{
+                       // System.out.println(result+"No DI and SN"+"4");
+                        ArrayList<String> rowFill = new ArrayList<String>();
+
+                        String message=formatString(" "," "," ");
+                        rowFill.add(result);//Instrument
+                        rowFill.add(" ");//Serial Number
+                        rowFill.add(" ");//DI
+                        rowFill.add(partid.toString().replace(",", ""));
+                        rowFill.add("Instrument Receiving");
+                        rowFill.add("Test and Development");
+                        rowFill.add("");
+                        rowFill.add("");
+                        rowFill.add(message);
+                        ew.write_row(rowFill, i);
+                        //No SN and DI
+                    }
                     //System.out.println(result.substring( 0,result.indexOf("SN:")-2));//insname
                     //System.out.println(result.substring(result.indexOf("SN:")+4,result.indexOf("DI")));//SN
                     //System.out.println(result.substring(result.indexOf("DI")+4));//DI
-                    ArrayList<String> rowFill = new ArrayList<String>();
-                    System.out.println("Info are : "+collect);
-
-                    rowFill.add(result.substring(0, result.indexOf("SN:") - 2));
-                    rowFill.add(result.substring(result.indexOf("SN:") + 4, result.indexOf("DI")).replace(",", ""));
-                    rowFill.add(result.substring(result.indexOf("DI") + 4).replace(",", ""));
-                    rowFill.add(partid.toString().replace(",", ""));
-                    rowFill.add("Instrument Receiving");
-                    rowFill.add("Test and Development");
-                    rowFill.add("");
-                    rowFill.add("");
-                    rowFill.add("");
-                    ew.write_row(rowFill, i);
-                }//get description
+     }//get description
             }
             ew.create_excel("C:\\Users\\mtcelec2\\Desktop\\output.xlsx");
 
@@ -157,6 +241,7 @@ public class App extends Application {
     private static Document parseXml(String xml) throws IOException, JDOMException {
         return builder.build(new InputSource(new StringReader(xml)));
     }
+    @org.jetbrains.annotations.NotNull
     private static String getDescription(String response){
         String result = response.substring(response.indexOf("<Description>")+13,response.indexOf("</Description>"));
         return result;
@@ -302,13 +387,9 @@ public class App extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                String fileName = path.substring(path.lastIndexOf("\\")+1);
+                fileName = path.substring(path.lastIndexOf("\\")+1);
                 infoBox(("Processing file "+fileName),"Successful");
                 secondStage.close();
-
-
-
-
             }
         });
 
@@ -316,7 +397,23 @@ public class App extends Application {
         secondStage.setScene(sceneFile);
         secondStage.show();
     }
-
+    private static String formatString(String SN,String DI,String partId){
+        String description =String.format(
+                "|Index|STRING|\n"
+                        + "| |PEMSA Tablets|\n"
+                        + "|Received|DATE|\n"
+                        + "|Method|METHOD|\n"
+                        + "|Purchasing| |\n"
+                        + "| | |\n"
+                        + "|Devices/RMA| |\n"
+                        + "| |%s, %s, %s|\n"
+                        + "| | |\n"
+                        + "|Received|NAME|\n"
+                        + "|Attention to|NAME|\n"
+                        + "|Notes| |\n"
+                        + "|[Link to log|HTTP//]|\n",SN,DI,partId);
+        return description;
+    }
     public static void infoBox(String infoMessage, String titleBar)
     {
         JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
