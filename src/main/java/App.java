@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -6,7 +7,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.sun.scenario.effect.impl.prism.PrImage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.PasswordField;
@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
+
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
@@ -23,12 +24,14 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 import javafx.application.Application;
+import com.sun.scenario.effect.impl.prism.PrImage;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -41,8 +44,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
+import  java.lang.Class.*;
 
 public class App extends Application {
     public static String fileName;
@@ -57,11 +59,16 @@ public class App extends Application {
     private static String hostName = "universityofvictoria.myfishbowl.com";
     private static int port = 28192;
 
-    public static void main(String[] args) {
-        launch();//UI
 
+    public static void main(String[] args) {
+        // Create new object of this class
+        String a = App.class.getCanonicalName();
+        System.out.println(a);
+        launch();//UI
         Connection connection = new Connection(hostName, port);
         // Create login XML request and send to the server
+        //App.userName="mtcelec2";
+        //App.passWord="a";
         String loginRequest = Requests.loginRequest(App.userName,App.passWord);
         String response = connection.sendRequest(loginRequest);
         if (response == null) {
@@ -89,166 +96,34 @@ public class App extends Application {
         // Login successful, store the key
         ticketKey = root.getChild("Ticket").getChild("Key").getValue();
         Element node = null;
-        /**
-         * Request Setup
-         * process the excel sheet and write to new file
-         **/
-
-        try {
-            //创建工作簿
-            FileInputStream is = new FileInputStream(App.path);
-            excelReader reader = new excelReader(is);
-            reader.read(is);
-            int max_row = reader.maxRow();
-
-            // int title =reader.getMapTitle("Serial #");get mapping title
-            excelWriter ew = new excelWriter(path, "name");
-            //Writing Header to the sheet
-            ew.write_header();
-            for (int i = 1; i < max_row; i++) {
-                ArrayList collect = reader.processRow(i);
-                if (collect.get(0) == null && collect.get(1) == null && collect.get(2) == null) {
-                    System.out.println("Process have completed！");
-                    break;
-
-                }
-                if (collect.get(2) != null) {
-                    BigInteger partid = new BigDecimal(collect.get(2).toString()).toBigInteger();
-                    //get Part XML format
-                    String getPart = Requests.get_part(partid);
-                    //connect to API and get response back
-                    response = connection.sendRequest(getPart);
-                    //get Description String
-                    String result = getDescription(response);
-
-                    String getNewpart=Requests.get_partToo(partid);
-                    String newResponse =connection.sendRequest(getNewpart);
-
-                    System.out.println(partid);
-
-                    if(result.indexOf("DI")!=-1 || result.indexOf("SN")!=-1){
-                        if(result.indexOf("DI")!=-1 && result.indexOf("SN")==-1){//DI
-                            //System.out.println(result+"ONLY DI"+"1");
-                            String message =formatString(" ",
-                                    ("DI:"+result.substring(0, result.indexOf("DI") - 1)),
-                                    ("MTC: "+partid.toString()));
-
-                            String temp= result.substring(result.indexOf("DI")+3);
-                            ArrayList<String> rowFill = new ArrayList<String>();
-                            rowFill.add(result.substring(0, result.indexOf("DI") - 1));//Instrument
-                            rowFill.add(" ");//Serial Number
-                            rowFill.add(temp.substring(0,temp.indexOf(" ")));//DI
-                            rowFill.add(partid.toString().replace(",", ""));
-                            rowFill.add("Instrument Receiving");
-                            rowFill.add("Test and Development");
-                            rowFill.add("");
-                            rowFill.add("");
-                            rowFill.add(message);
-                            ew.write_row(rowFill, i);
-                        }else if(result.indexOf("DI")==-1 && result.indexOf("SN")!=-1){
-                            //SN
-                            //System.out.println(result.substring(0, result.indexOf("SN") - 1));
-                            String temp= result.substring(result.indexOf("SN")+3);
-                            String message =formatString(("SN:"+temp.substring(0,temp.indexOf(" "))),
-                                   " ",("MTC: "+ partid.toString()));
-                            //System.out.println(result.substring(0,b.indexOf(" ")));
-                            ArrayList<String> rowFill = new ArrayList<String>();
-                            rowFill.add(result.substring(0, result.indexOf("SN") - 1));//Instrument
-                            rowFill.add(temp.substring(0,temp.indexOf(" ")));//Serial Number
-                            rowFill.add(" ");//DI
-                            rowFill.add(partid.toString().replace(",", ""));
-                            rowFill.add("Instrument Receiving");
-                            rowFill.add("Test and Development");
-                            rowFill.add("");
-                            rowFill.add("");
-                            rowFill.add(message);
-                            ew.write_row(rowFill, i);
-                        }else{
-                            int indexSN =result.indexOf("SN");
-                            int indexDI =result.indexOf("DI");
-
-                            //SN and DI
-                            if(indexSN<indexDI){//SN is in the front of DI
-                                ArrayList<String> rowFill = new ArrayList<String>();
 
 
-                                String message =formatString(("SN: "+result.substring(result.indexOf("SN") + 3, result.indexOf("DI"))),
-                                        ("DI:" + result.substring(result.indexOf("DI") + 3))
-                                        , ("MTC: "+partid.toString()));
+        write_to_Excel(connection,response);//run write excel code
+        System.exit(1);
 
-
-                                rowFill.add(result.substring(0, result.indexOf("SN:") - 2));
-                                rowFill.add(result.substring(result.indexOf("SN") + 3, result.indexOf("DI")).replace(",", ""));
-                                rowFill.add(result.substring(result.indexOf("DI") + 3).replace(",", ""));
-                                rowFill.add(partid.toString().replace(",", ""));
-                                rowFill.add("Instrument Receiving");
-                                rowFill.add("Test and Development");
-                                rowFill.add("");
-                                rowFill.add("");
-                                rowFill.add(message);
-                                ew.write_row(rowFill, i);
-                            }else{//DI is in the front of SN
-
-                                String message =formatString(("SN: "+result.substring(result.indexOf("SN") + 3)),
-                                        ("DI: "+result.substring(result.indexOf("DI") + 3, result.indexOf("SN")))
-                                        ,("MTC: "+partid.toString()));
-
-                                ArrayList<String> rowFill = new ArrayList<String>();
-                                rowFill.add(result.substring(0, result.indexOf("DI") - 2));
-                                rowFill.add(result.substring(result.indexOf("SN") + 3).replace(",", ""));
-                                rowFill.add(result.substring(result.indexOf("DI") + 3, result.indexOf("SN")).replace(",", ""));
-                                rowFill.add(partid.toString().replace(",", ""));
-                                rowFill.add("Instrument Receiving");
-                                rowFill.add("Test and Development");
-                                rowFill.add("");
-                                rowFill.add("");
-                                rowFill.add(message);
-                                ew.write_row(rowFill, i);
-                            }
-                        }
-                    }else{
-                       // System.out.println(result+"No DI and SN"+"4");
-                        ArrayList<String> rowFill = new ArrayList<String>();
-
-                        String message=formatString(" "," "," ");
-                        rowFill.add(result);//Instrument
-                        rowFill.add(" ");//Serial Number
-                        rowFill.add(" ");//DI
-                        rowFill.add(partid.toString().replace(",", ""));
-                        rowFill.add("Instrument Receiving");
-                        rowFill.add("Test and Development");
-                        rowFill.add("");
-                        rowFill.add("");
-                        rowFill.add(message);
-                        ew.write_row(rowFill, i);
-                        //No SN and DI
-                    }
-                    //System.out.println(result.substring( 0,result.indexOf("SN:")-2));//insname
-                    //System.out.println(result.substring(result.indexOf("SN:")+4,result.indexOf("DI")));//SN
-                    //System.out.println(result.substring(result.indexOf("DI")+4));//DI
-     }//get description
-            }
-            ew.create_excel("C:\\Users\\mtcelec2\\Desktop\\output.xlsx");
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
-
-
-
+    /**
+     * @param xml
+     * @return
+     * @throws IOException
+     * @throws JDOMException
+     */
     private static Document parseXml(String xml) throws IOException, JDOMException {
         return builder.build(new InputSource(new StringReader(xml)));
     }
-    @org.jetbrains.annotations.NotNull
+    /**
+     *
+     * @param response
+     * @return String description
+     */
     private static String getDescription(String response){
         String result = response.substring(response.indexOf("<Description>")+13,response.indexOf("</Description>"));
         return result;
     }
-
-
-    @Override
+    /**
+     * @param primaryStage
+     * @throws Exception
+     */
     public void start(Stage primaryStage) throws Exception {
      primaryStage.setTitle("Login");//https://blog.csdn.net/guanguoxiang/article/details/45461879
      GridPane grid =new GridPane();
@@ -265,7 +140,7 @@ public class App extends Application {
 
 
 
-    Label username = new Label("User Name:");
+    Label username = new Label("Username:");
     grid.add(username, 0, 1);
     username.setFont(Font.font(13));
 
@@ -319,8 +194,6 @@ public class App extends Application {
                 primaryStage.close();
                 Stage secondStage = new Stage();
                 gotoFile(secondStage);
-
-
             }else{
                App.infoBox("username and password doesn't match with system ", "Login Error");
             }
@@ -330,16 +203,16 @@ public class App extends Application {
     primaryStage.setScene(sence);
     primaryStage.show();
     }
-
+    /**
+     *
+     * @param secondStage
+     */
     private void gotoFile(Stage secondStage) {
-        //
-
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home"))
-        );
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        System.out.println(System.getProperty("user.home"));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx")
-
         );
         Text fileChoose = new Text("Please Choose a File ");
         fileChoose.setFont(Font.font(15));
@@ -414,9 +287,170 @@ public class App extends Application {
                         + "|[Link to log|HTTP//]|\n",SN,DI,partId);
         return description;
     }
-    public static void infoBox(String infoMessage, String titleBar)
-    {
+    public static void infoBox(String infoMessage, String titleBar) {
         JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
+    /**
+     *
+     * @param connection
+     * @param response
+     */
+    public static void write_to_Excel(Connection connection,String response){
+        try {
+            //创建工作簿
+            FileInputStream is = new FileInputStream(App.path);
+            excelReader reader = new excelReader(is);
+            reader.read(is);
+
+            int max_row = reader.maxRow();
+
+            // int title =reader.getMapTitle("Serial #");get mapping title
+            excelWriter ew = new excelWriter(path, "name");
+            //Writing Header to the sheet
+            ew.write_header();
+      for (int i = 1; i < max_row; i++) {
+        ArrayList collect = reader.processRow(i);
+        if (collect.get(0) == null && collect.get(1) == null && collect.get(2) == null) {
+          System.out.println("Process have completed！");
+          break;
+        }
+        if (collect.get(2) != null) {
+          BigInteger partid = new BigDecimal(collect.get(2).toString()).toBigInteger();
+          // get Part XML format
+          String getPart = Requests.get_part(partid);
+          // connect to API and get response back
+          response = connection.sendRequest(getPart);
+          System.out.println(response);
+          System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+          // get Description String
+          String result = getDescription(response);
+
+
+          if (result.indexOf("DI") != -1 || result.indexOf("SN") != -1) {
+            if (result.indexOf("DI") != -1 && result.indexOf("SN") == -1) { // DI
+              // System.out.println(result+"ONLY DI"+"1");
+              String message =
+                  formatString(
+                      " ",
+                      ("DI:" + result.substring(0, result.indexOf("DI") - 1)),
+                      ("MTC: " + partid.toString()));
+
+              String temp = result.substring(result.indexOf("DI") + 3);
+              ArrayList<String> rowFill = new ArrayList<String>();
+              rowFill.add(result.substring(0, result.indexOf("DI") - 1)); // Instrument
+              rowFill.add(" "); // Serial Number
+              rowFill.add(temp.substring(0, temp.indexOf(" "))); // DI
+              rowFill.add(partid.toString().replace(",", ""));
+              rowFill.add("Instrument Receiving");
+              rowFill.add("Test and Development");
+              rowFill.add("");
+              rowFill.add("");
+              rowFill.add(message);
+              ew.write_row(rowFill, i);
+            } else if (result.indexOf("DI") == -1 && result.indexOf("SN") != -1) {
+              // SN
+              // System.out.println(result.substring(0, result.indexOf("SN") - 1));
+              String temp = result.substring(result.indexOf("SN") + 3);
+              String message =
+                  formatString(
+                      ("SN:" + temp.substring(0, temp.indexOf(" "))),
+                      " ",
+                      ("MTC: " + partid.toString()));
+              // System.out.println(result.substring(0,b.indexOf(" ")));
+              ArrayList<String> rowFill = new ArrayList<String>();
+              rowFill.add(result.substring(0, result.indexOf("SN") - 1)); // Instrument
+              rowFill.add(temp.substring(0, temp.indexOf(" "))); // Serial Number
+              rowFill.add(" "); // DI
+              rowFill.add(partid.toString().replace(",", ""));
+              rowFill.add("Instrument Receiving");
+              rowFill.add("Test and Development");
+              rowFill.add("");
+              rowFill.add("");
+              rowFill.add(message);
+              ew.write_row(rowFill, i);
+            } else {
+              int indexSN = result.indexOf("SN");
+              int indexDI = result.indexOf("DI");
+
+              // SN and DI
+              if (indexSN < indexDI) { // SN is in the front of DI
+                ArrayList<String> rowFill = new ArrayList<String>();
+
+                String message =
+                    formatString(
+                        ("SN: " + result.substring(result.indexOf("SN") + 3, result.indexOf("DI"))),
+                        ("DI:" + result.substring(result.indexOf("DI") + 3)),
+                        ("MTC: " + partid.toString()));
+
+                rowFill.add(result.substring(0, result.indexOf("SN:") - 2));
+                rowFill.add(
+                    result
+                        .substring(result.indexOf("SN") + 3, result.indexOf("DI"))
+                        .replace(",", ""));
+                rowFill.add(result.substring(result.indexOf("DI") + 3).replace(",", ""));
+                rowFill.add(partid.toString().replace(",", ""));
+                rowFill.add("Instrument Receiving");
+                rowFill.add("Test and Development");
+                rowFill.add("");
+                rowFill.add("");
+                rowFill.add(message);
+                ew.write_row(rowFill, i);
+              } else { // DI is in the front of SN
+
+                String message =
+                    formatString(
+                        ("SN: " + result.substring(result.indexOf("SN") + 3)),
+                        ("DI: " + result.substring(result.indexOf("DI") + 3, result.indexOf("SN"))),
+                        ("MTC: " + partid.toString()));
+
+                ArrayList<String> rowFill = new ArrayList<String>();
+                rowFill.add(result.substring(0, result.indexOf("DI") - 2));
+                rowFill.add(result.substring(result.indexOf("SN") + 3).replace(",", ""));
+                rowFill.add(
+                        result.substring(result.indexOf("DI") + 3, result.indexOf("SN"))
+                        .replace(",", ""));
+                rowFill.add(partid.toString().replace(",", ""));
+                rowFill.add("Instrument Receiving");
+                rowFill.add("Test and Development");
+                rowFill.add("");
+                rowFill.add("");
+                rowFill.add(message);
+                ew.write_row(rowFill, i);
+              }
+            }
+          } else {
+            // System.out.println(result+"No DI and SN"+"4");
+            ArrayList<String> rowFill = new ArrayList<String>();
+
+
+            String message = formatString(" ", " ", " ");
+            rowFill.add(result); // Instrument
+            rowFill.add(" "); // Serial Number
+            rowFill.add(" "); // DI
+            rowFill.add(partid.toString().replace(",", ""));
+            rowFill.add("Instrument Receiving");
+            rowFill.add("Test and Development");
+            rowFill.add("");
+            rowFill.add("");
+            rowFill.add(message);
+            ew.write_row(rowFill, i);
+            // No SN and DI
+          }
+          // System.out.println(result.substring( 0,result.indexOf("SN:")-2));//insname
+          // System.out.println(result.substring(result.indexOf("SN:")+4,result.indexOf("DI")));//SN
+          // System.out.println(result.substring(result.indexOf("DI")+4));//DI
+        } else {
+          continue;
+        }
+}//end of for
+            String outpath=System.getProperty("user.home");
+            String output_path =String.format("%s\\out_%s",outpath,fileName);
+            System.out.println(output_path);
+
+            ew.create_excel(output_path);//Write to excel
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
+}
 

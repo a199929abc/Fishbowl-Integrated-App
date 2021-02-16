@@ -3,7 +3,6 @@
 
 import com.sun.xml.messaging.saaj.packaging.mime.MessagingException;
 import com.sun.xml.messaging.saaj.packaging.mime.internet.MimeUtility;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -54,6 +53,20 @@ public class Requests {
                 "</FbiXml>";
 
         return xml;
+    }
+    public static String get_part_list(String deatils){
+      String xml =  "<FbiXml>"+
+        "<Ticket>"+
+        "<Key>"+App.ticketKey+"</Key>"+
+        "</Ticket>"+
+        "<FbiMsgsRq>"+
+        "<GetPartListRq>"+
+        //"<PartNum>"+partInfo+"</PartNum>"+
+              "<PartDesc>"+deatils+"</PartDesc>"+
+        "</GetPartListRq>"+
+        "</FbiMsgsRq>"+
+        "</FbiXml>";
+      return xml;
     }
 public static String get_part(BigInteger partId){
         String xml="<FbiXml>" +

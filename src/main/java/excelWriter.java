@@ -58,7 +58,7 @@ public class excelWriter {
             this.out = new FileOutputStream(outPath);
             this.workbook.write(this.out);
             this.out.flush();
-            System.out.println("Excel process completed！");
+
             this.out.close();
         } catch (Exception e) {
             e.printStackTrace();
