@@ -56,6 +56,7 @@ public class excelWriter {
     public void create_excel(String outPath) {
         try {
             this.out = new FileOutputStream(outPath);
+
             this.workbook.write(this.out);
             this.out.flush();
 

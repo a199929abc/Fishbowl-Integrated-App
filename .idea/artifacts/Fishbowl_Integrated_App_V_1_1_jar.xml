@@ -1,0 +1,63 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Fishbowl_Integrated_App_V 1.1:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Fishbowl_Integrated_App_V_1_1_jar</output-path>
+    <root id="archive" name="Fishbowl_Integrated_App.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Fishbowl_Integrated_App" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/15.0.1/javafx-fxml-15.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.13/commons-codec-1.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/4.1.1/poi-ooxml-4.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/15/javafx-controls-15-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/15/javafx-base-15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/20.1.0/annotations-20.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/javax/xml/soap/saaj-api/1.3.5/saaj-api-1.3.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/sun/xml/messaging/saaj/saaj-impl/1.5.1/saaj-impl-1.5.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/15.0.1/javafx-fxml-15.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/jakarta/activation/jakarta.activation-api/1.2.1/jakarta.activation-api-1.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/virtuald/curvesapi/1.06/curvesapi-1.06.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/jakarta/xml/bind/jakarta.xml.bind-api/2.3.2/jakarta.xml.bind-api-2.3.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml-schemas/4.1.1/poi-ooxml-schemas-4.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/15/javafx-controls-15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jvnet/staxex/stax-ex/1.8.1/stax-ex-1.8.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/poi/poi/4.1.1/poi-4.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.19/commons-compress-1.19.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jvnet/mimepull/mimepull/1.9.11/mimepull-1.9.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/15/javafx-graphics-15-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/15/javafx-base-15-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jdom/jdom/1.1.3/jdom-1.1.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/xmlbeans/xmlbeans/3.1.0/xmlbeans-3.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/15/javafx-graphics-15.jar" path-in-jar="/" />
+      <element id="library" level="project" name="Maven: com.github.virtuald:curvesapi:1.06" />
+      <element id="library" level="project" name="Maven: com.sun.xml.messaging.saaj:saaj-impl:1.5.1" />
+      <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.13" />
+      <element id="library" level="project" name="Maven: jakarta.activation:jakarta.activation-api:1.2.1" />
+      <element id="library" level="project" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:2.3.2" />
+      <element id="library" level="project" name="Maven: jakarta.xml.soap:jakarta.xml.soap-api:1.4.1" />
+      <element id="library" level="project" name="Maven: javax.xml.soap:saaj-api:1.3.5" />
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.4" />
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.19" />
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-math3:3.6.1" />
+      <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml-schemas:4.1.1" />
+      <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml:4.1.1" />
+      <element id="library" level="project" name="Maven: org.apache.poi:poi:4.1.1" />
+      <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:3.1.0" />
+      <element id="library" level="project" name="Maven: org.jdom:jdom:1.1.3" />
+      <element id="library" level="project" name="Maven: org.jetbrains:annotations:20.1.0" />
+      <element id="library" level="project" name="Maven: org.jvnet.mimepull:mimepull:1.9.11" />
+      <element id="library" level="project" name="Maven: org.jvnet.staxex:stax-ex:1.8.1" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:15" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:win:15" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:15" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:win:15" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-fxml:15.0.1" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-fxml:win:15.0.1" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:15" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:win:15" />
+    </root>
+  </artifact>
+</component>
