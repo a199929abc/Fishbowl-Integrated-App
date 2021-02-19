@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -45,6 +44,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import  java.lang.Class.*;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 public class App extends Application {
     public static String fileName;
@@ -62,8 +63,7 @@ public class App extends Application {
 
     public static void main(String[] args) {
         // Create new object of this class
-        String a = App.class.getCanonicalName();
-        System.out.println(a);
+
         launch();//UI
         Connection connection = new Connection(hostName, port);
         // Create login XML request and send to the server
@@ -268,10 +268,12 @@ public class App extends Application {
         secondStage.show();
     }
     private static String formatString(String SN,String DI,String partId){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
         String description =String.format(
                 "|Index|STRING|\n"
                         + "| |PEMSA Tablets|\n"
-                        + "|Received|DATE|\n"
+                        + "|Received|%s|\n"
                         + "|Method|METHOD|\n"
                         + "|Purchasing| |\n"
                         + "| | |\n"
@@ -281,7 +283,7 @@ public class App extends Application {
                         + "|Received|NAME|\n"
                         + "|Attention to|NAME|\n"
                         + "|Notes| |\n"
-                        + "|[Link to log|HTTP//]|\n",SN,DI,partId);
+                        + "|[Link to log|HTTP//]|\n",dtf.format(now),SN,DI,partId);
         return description;
     }
     public static void infoBox(String infoMessage, String titleBar) {
@@ -307,10 +309,12 @@ public class App extends Application {
             ew.write_header();
             int count=0;
       try{
+          ArrayList collect=new ArrayList();
           for (int i = 1; i < max_row; i++) {
               System.out.println(i);
               count=i+1;
-              ArrayList collect = reader.processRow(i);
+              System.out.println(collect);
+               collect= reader.processRow(i);
               if (collect.get(0) == null && collect.get(1) == null && collect.get(2) == null) {
                   System.out.println("Process have completed！");
                   break;
@@ -323,6 +327,7 @@ public class App extends Application {
                   response = connection.sendRequest(getPart);
                   // get Description String
                   String result = getDescription(response);
+
 
 
                   if (result.indexOf("DI") != -1 || result.indexOf("SN") != -1) {
@@ -379,7 +384,7 @@ public class App extends Application {
                               String temp=result.substring(result.indexOf("DI") + 4);
 
                               //
-                              if (temp.length() != 5) {
+                              if (temp.length() != 5&&temp.length()!=4&&temp.length()!=3) {
                                   temp = temp.substring(0, temp.indexOf(" "));
                               }
                               //System.out.println((temp+"---aa"));
@@ -404,8 +409,12 @@ public class App extends Application {
                               rowFill.add(message);
                               ew.write_row(rowFill, i);
                           } else { // DI is in the front of SN
+
                               String temp=result.substring(result.indexOf("SN") + 4).replace(",", "");
-                              temp=temp.substring(0, temp.indexOf(" "));
+
+                              if (temp.length() != 5&&temp.length()!=4&&temp.length()!=3) {
+                                  temp = temp.substring(0, temp.indexOf(" "));
+                              }
                               System.out.println(temp);
                               String message =
                                       formatString(
