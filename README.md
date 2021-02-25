@@ -8,7 +8,7 @@ As figure 1 shown, the only input the application needs is a **column of Invento
 After you click the .exe file. You will see a login page. Please use the username and password at the MTC fishbowl system. 
 
 ## File read section:
-Once you login to the application, you will see a new window shown in figure 3, click **Explore** button to find the .xlsx file you prepared in the input section. After that, you will see the file path shown on the panel. Click ** Enter ** to run the application. If you accidentally choose the wrong file, you can simply Explore again, the new file path will be shown.
+Once you login to the application, you will see a new window shown in figure 3, click **Explore** button to find the .xlsx file you prepared in the input section. After that, you will see the file path shown on the panel. Click **Enter** to run the application. If you accidentally choose the wrong file, you can simply Explore again, the new file path will be shown.
 
 ## Process section: 
 If you see a pop-up window shown in figure 4, that means you successfully create a recovery template. The output excel file will normally at the users' root directory. The output filename format: **out_YOUINPUTFILENAME.xlsx** if you can’t find it for some reason. Please search the format name on your computer. 
