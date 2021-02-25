@@ -1,6 +1,3 @@
-
-
-
 import com.sun.xml.messaging.saaj.packaging.mime.MessagingException;
 import com.sun.xml.messaging.saaj.packaging.mime.internet.MimeUtility;
 import java.io.ByteArrayOutputStream;

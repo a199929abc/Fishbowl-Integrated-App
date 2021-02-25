@@ -274,11 +274,11 @@ public class App extends Application {
                 "|Index|STRING|\n"
                         + "| |PEMSA Tablets|\n"
                         + "|Received|%s|\n"
-                        + "|Method|METHOD|\n"
+                        + "|Method|STRING|\n"
                         + "|Purchasing| |\n"
                         + "| | |\n"
                         + "|Devices/RMA| |\n"
-                        + "| |%s, %s, %s|\n"
+                        + "| |%s %s %s|\n"
                         + "| | |\n"
                         + "|Received|NAME|\n"
                         + "|Attention to|NAME|\n"
@@ -313,8 +313,7 @@ public class App extends Application {
           for (int i = 1; i < max_row; i++) {
               System.out.println(i);
               count=i+1;
-              System.out.println(collect);
-               collect= reader.processRow(i);
+              collect= reader.processRow(i);
               if (collect.get(0) == null && collect.get(1) == null && collect.get(2) == null) {
                   System.out.println("Process have completed！");
                   break;
@@ -322,6 +321,7 @@ public class App extends Application {
               if (collect.get(2) != null) {
                   BigInteger partid = new BigDecimal(collect.get(2).toString()).toBigInteger();
                   // get Part XML format
+                  System.out.println(partid);
                   String getPart = Requests.get_part(partid);
                   // connect to API and get response back
                   response = connection.sendRequest(getPart);
@@ -384,7 +384,7 @@ public class App extends Application {
                               String temp=result.substring(result.indexOf("DI") + 4);
 
                               //
-                              if (temp.length() != 5&&temp.length()!=4&&temp.length()!=3) {
+                              if (temp.length()!= 6&&temp.length() != 5&&temp.length()!=4&&temp.length()!=3) {
                                   temp = temp.substring(0, temp.indexOf(" "));
                               }
                               //System.out.println((temp+"---aa"));
@@ -397,8 +397,7 @@ public class App extends Application {
 
                               rowFill.add(result.substring(0, result.indexOf("SN:") - 2));
                               rowFill.add(
-                                      result
-                                              .substring(result.indexOf("SN") + 3, result.indexOf("DI"))
+                                      result.substring(result.indexOf("SN") + 3, result.indexOf("DI"))
                                               .replace(",", ""));
                               rowFill.add(temp);
                               rowFill.add(partid.toString().replace(",", ""));
