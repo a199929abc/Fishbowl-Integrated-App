@@ -15,3 +15,5 @@ If you see a pop-up window shown in figure 4, that means you successfully create
 
 ## Output section: 
 After the process has completed, you will receive a new excel file as shown in figure 5. The program automatically fills the excel sheet based on the inventory provided. The Instrument name, serial number and device number getting from the fishbowl inventory system.
+
+###Description Area: 
