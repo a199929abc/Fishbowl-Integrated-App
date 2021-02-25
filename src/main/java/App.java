@@ -271,7 +271,7 @@ public class App extends Application {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         String description =String.format(
-                "|Index|STRING|\n"
+                "|Index||\n"
                         + "| |PEMSA Tablets|\n"
                         + "|Received|%s|\n"
                         + "|Method|STRING|\n"
@@ -280,8 +280,8 @@ public class App extends Application {
                         + "|Devices/RMA| |\n"
                         + "| |%s %s %s|\n"
                         + "| | |\n"
-                        + "|Received|NAME|\n"
-                        + "|Attention to|NAME|\n"
+                        + "|Received|STRING|\n"
+                        + "|Attention to|STRING|\n"
                         + "|Notes| |\n"
                         + "|[Link to log|HTTP//]|\n",dtf.format(now),SN,DI,partId);
         return description;
@@ -330,13 +330,13 @@ public class App extends Application {
 
 
 
-                  if (result.indexOf("DI") != -1 || result.indexOf("SN") != -1) {
-                      if (result.indexOf("DI") != -1 && result.indexOf("SN") == -1) { // DI
+                  if (result.indexOf("DI") != -1 || result.indexOf("SN:") != -1) {
+                      if (result.indexOf("DI") != -1 && result.indexOf("SN:") == -1) { // DI
                           // System.out.println(result+"ONLY DI"+"1");
                           String message =
                                   formatString(
-                                          " ",
-                                          ("DI:" + result.substring(0, result.indexOf("DI") - 1)),
+                                          "",
+                                          ("DI:" + result.substring(0, result.indexOf("DI") - 1)+","),
                                           ("MTC: " + partid.toString()));
 
                           String temp = result.substring(result.indexOf("DI") + 3);
@@ -351,20 +351,20 @@ public class App extends Application {
                           rowFill.add("");
                           rowFill.add(message);
                           ew.write_row(rowFill, i);
-                      } else if (result.indexOf("DI") == -1 && result.indexOf("SN") != -1) {
+                      } else if (result.indexOf("DI") == -1 && result.indexOf("SN:") != -1) {
                           // SN
                           // System.out.println(result.substring(0, result.indexOf("SN") - 1));
                           String temp = result.substring(result.indexOf("SN") + 3);
                           String message =
                                   formatString(
-                                          ("SN:" + temp.substring(0, temp.indexOf(" "))),
-                                          " ",
+                                          ("SN:" + temp.substring(0, temp.indexOf(" ")).replace(",", "")+","),
+                                          "",
                                           ("MTC: " + partid.toString()));
                           // System.out.println(result.substring(0,b.indexOf(" ")));
                           ArrayList<String> rowFill = new ArrayList<String>();
                           rowFill.add(result.substring(0, result.indexOf("SN") - 1)); // Instrument
                           rowFill.add(temp.substring(0, temp.indexOf(" "))); // Serial Number
-                          rowFill.add(" "); // DI
+                          rowFill.add(""); // DI
                           rowFill.add(partid.toString().replace(",", ""));
                           rowFill.add("Instrument Receiving");
                           rowFill.add("Test and Development");
@@ -391,8 +391,9 @@ public class App extends Application {
 
                               String message =
                                       formatString(
-                                              ("SN: " + result.substring(result.indexOf("SN") + 3, result.indexOf("DI"))),
-                                              ("DI:" + temp),
+                                              ("SN: " + result.substring(result.indexOf("SN") + 3, result.indexOf("DI"))
+                                                      .replace(",", "")+","),
+                                              ("DI:" + temp+","),
                                               ("MTC: " + partid.toString()));
 
                               rowFill.add(result.substring(0, result.indexOf("SN:") - 2));
@@ -417,14 +418,12 @@ public class App extends Application {
                               System.out.println(temp);
                               String message =
                                       formatString(
-                                              ("SN: " + temp),
-                                              ("DI: " + result.substring(result.indexOf("DI") + 3, result.indexOf("SN"))),
+                                              ("SN: " + temp+","),
+                                              ("DI: " + result.substring(result.indexOf("DI") + 3, result.indexOf("SN"))+","),
                                               ("MTC: " + partid.toString()));
 
                               ArrayList<String> rowFill = new ArrayList<String>();
                               rowFill.add(result.substring(0, result.indexOf("DI") - 2));
-
-
 
                               rowFill.add(temp);
                               rowFill.add(
@@ -445,8 +444,8 @@ public class App extends Application {
 
                       String message =
                               formatString(
-                                      (" " ),
-                                      (" "),
+                                      (""),
+                                      (""),
                                       ("MTC: " + partid.toString()));
 
 
