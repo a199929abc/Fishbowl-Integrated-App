@@ -41,11 +41,16 @@ Figure 6. description
 
 ![alt text](/picture/description.JPG)
 
-#QA section:
+# QA section:
 ### 1. Why I can't login ? 
 There might be two possible error lead to this problem, 1) your username and password are wrong, please double-check and enter again. 2) Please check your Internet and retry.
 
 ### 2. Get pop-up error message "Check row number 8 then retry"
 This happens because the description area in the inventory system doesn’t format right. There are some possible way to fix it.
 1) Open fishbowl API ->search the part number ->check the description area whether format as :”SN: XXX, DI:XXXXX” You can modify the description in the fishbowl system and retry.
+
+
+Figure 7. Error
+![alt text](/picture/error.JPG)
+
 
