@@ -32,6 +32,7 @@ Figure 4. process complete
 After the process has completed, you will receive a new excel file as shown in figure 5. The program automatically fills the excel sheet based on the inventory provided. The Instrument name, serial number and device number getting from the fishbowl inventory system.
 
 Figure 5. output 
+
 ![alt text](/picture/outputsample.JPG)
 
 ## Description Area:
@@ -49,8 +50,8 @@ There might be two possible error lead to this problem, 1) your username and pas
 This happens because the description area in the inventory system doesn’t format right. There are some possible way to fix it.
 1) Open fishbowl API ->search the part number ->check the description area whether format as :”SN: XXX, DI:XXXXX” You can modify the description in the fishbowl system and retry.
 
-
 Figure 7. Error
+
 ![alt text](/picture/error.JPG)
 
 
