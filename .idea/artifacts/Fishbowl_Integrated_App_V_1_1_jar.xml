@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="Fishbowl_Integrated_App_V 1.1:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Fishbowl_Integrated_App_V_1_1_jar</output-path>
-    <root id="archive" name="Fishbowl_Integrated_App.jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Fishbowl_Integrated_App_V_1_1</output-path>
+    <root id="archive" name="Fishbowl_Integrated_App_V 1.1_jar.jar">
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" />
       </element>
