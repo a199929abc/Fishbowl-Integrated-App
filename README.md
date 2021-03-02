@@ -68,6 +68,7 @@ Error might show up to case below:
 1. "EtherTek RMS-300 Monitor, SN 00-50-C2-53-89-AC, DI: 24368" Reason : "SN:" tag missing ":" can be add to fishbowl client
 2. "EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC, DI 24368" Reason : "DI:" tag missing ":" can be add to fishbowl client
 3. "EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC, DI: " Reason : After "DI: " tag missing value. If you don't know the DI, add "Pending" 
-4. More cases can be discovered in the Fishbowl client. If you are not sure where is the mistake, FOLLOW THE CORRECT format and modify the description
+4. "EtherTek RMS-300 Monitor, SN : 00-50-C2-53-89-AC, DI: Pending" Reason ： EXTRA SPACE in "SN :", should be "SN:" DI might have similar issuse
+5. More cases can be discovered in the Fishbowl client. If you are not sure where is the mistake, FOLLOW THE CORRECT format and modify the description
 
 
