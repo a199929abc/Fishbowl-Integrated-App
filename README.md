@@ -56,12 +56,12 @@ Figure 7. Error
 
 ### Format Issue
 Correct format :
-1. SN and DI exist. SN is in the front of DI  **EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC, DI: 24368**
-2. SN and DI exist. DI is in the front of SN  **EtherTek RMS-300 Monitor, DI: 24368 SN: 00-50-C2-53-89-AC**
-3. ONLY DI exist : **EtherTek RMS-300 Monitor, DI: 24368**
-4. ONLY SN exist : **EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC**
-5. DI and SN don't exist : **EtherTek RMS-300 Monitor**
-6. (Update) SN exist DI is pending : **EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC DI: Pending** "pending" is Capital insensitive can be any format
+1. SN and DI exist. SN is in the front of DI :  "**EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC, DI: 24368**"
+2. SN and DI exist. DI is in the front of SN :  "**EtherTek RMS-300 Monitor, DI: 24368 SN: 00-50-C2-53-89-AC**"
+3. ONLY DI exist : "**EtherTek RMS-300 Monitor, DI: 24368**"
+4. ONLY SN exist : "**EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC**"
+5. DI and SN don't exist : "**EtherTek RMS-300 Monitor**"
+6. (Update) SN exist DI is pending : "**EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC DI: Pending**"  "pending" is Capital insensitive can be any format
 
 
 Error might show up to case below: 
