@@ -54,4 +54,20 @@ Figure 7. Error
 
 ![alt text](/picture/error.JPG)
 
+### Format Issue
+Correct format :
+1. SN and DI exist. SN is in the front of DI  **EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC, DI: 24368**
+2. SN and DI exist. DI is in the front of SN  **EtherTek RMS-300 Monitor, DI: 24368 SN: 00-50-C2-53-89-AC**
+3. ONLY DI exist : **EtherTek RMS-300 Monitor, DI: 24368**
+4. ONLY SN exist : **EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC**
+5. DI and SN don't exist : **EtherTek RMS-300 Monitor**
+6. (Update) SN exist DI is pending : **EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC DI: Pending** "pending" is Capital insensitive can be any format
+
+
+Error might show up to case below: 
+1. "EtherTek RMS-300 Monitor, SN 00-50-C2-53-89-AC, DI: 24368" Reason : "SN:" tag missing ":" can be add to fishbowl client
+2. "EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC, DI 24368" Reason : "DI:" tag missing ":" can be add to fishbowl client
+3. "EtherTek RMS-300 Monitor, SN: 00-50-C2-53-89-AC, DI: " Reason : After "DI: " tag missing value. If you don't know the DI, add "Pending" 
+4. More cases can be discovered in the Fishbowl client. If you are not sure where is the mistake, FOLLOW THE CORRECT format and modify the description
+
 
