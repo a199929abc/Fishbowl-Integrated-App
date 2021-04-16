@@ -11,4 +11,9 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Fishbowl_Integrated_App" options="--add-exports java.base/sun.net.idn=ALL-UNNAMED" />
+    </option>
+  </component>
 </project>

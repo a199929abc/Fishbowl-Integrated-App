@@ -272,7 +272,7 @@ public class App extends Application {
         LocalDateTime now = LocalDateTime.now();
         String description =String.format(
                 "|Index||\n"
-                        + "| |PEMSA Tablets|\n"
+                        + "| | ENTER PROJECT HERE|\n"
                         + "|Received|%s|\n"
                         + "|Method|STRING|\n"
                         + "|Purchasing| |\n"
@@ -345,7 +345,7 @@ public class App extends Application {
                           rowFill.add(" "); // Serial Number
                           rowFill.add(temp.substring(0, temp.indexOf(" "))); // DI
                           rowFill.add(partid.toString().replace(",", ""));
-                          rowFill.add("Instrument Receiving");
+                          rowFill.add("instrument recovery");
                           rowFill.add("Test and Development");
                           rowFill.add("");
                           rowFill.add("");
@@ -366,7 +366,7 @@ public class App extends Application {
                           rowFill.add(temp.substring(0, temp.indexOf(" "))); // Serial Number
                           rowFill.add(""); // DI
                           rowFill.add(partid.toString().replace(",", ""));
-                          rowFill.add("Instrument Receiving");
+                          rowFill.add("instrument recovery");
                           rowFill.add("Test and Development");
                           rowFill.add("");
                           rowFill.add("");
@@ -384,7 +384,8 @@ public class App extends Application {
                               String temp=result.substring(result.indexOf("DI") + 4);
 
                               //
-                              if (temp.length()!= 6&&temp.length() != 5&&temp.length()!=4&&temp.length()!=3) {
+                              if (temp.length()!= 7&&temp.length()!= 6&&temp.length() != 5&&temp.length()!=4&&temp.length()!=3
+                              &&temp.length()!=2) {
                                   temp = temp.substring(0, temp.indexOf(" "));
                               }
                               //System.out.println((temp+"---aa"));
@@ -402,7 +403,7 @@ public class App extends Application {
                                               .replace(",", ""));
                               rowFill.add(temp);
                               rowFill.add(partid.toString().replace(",", ""));
-                              rowFill.add("Instrument Receiving");
+                              rowFill.add("instrument recovery");
                               rowFill.add("Test and Development");
                               rowFill.add("");
                               rowFill.add("");
@@ -412,7 +413,7 @@ public class App extends Application {
 
                               String temp=result.substring(result.indexOf("SN") + 4).replace(",", "");
 
-                              if (temp.length() != 5&&temp.length()!=4&&temp.length()!=3) {
+                              if (temp.length() != 5&&temp.length()!=4&&temp.length()!=3&&temp.length()!=13) {
                                   temp = temp.substring(0, temp.indexOf(" "));
                               }
                               System.out.println(temp);
@@ -430,7 +431,7 @@ public class App extends Application {
                                       result.substring(result.indexOf("DI") + 3, result.indexOf("SN"))
                                               .replace(",", ""));
                               rowFill.add(partid.toString());
-                              rowFill.add("Instrument Receiving");
+                              rowFill.add("instrument recovery");
                               rowFill.add("Test and Development");
                               rowFill.add("");
                               rowFill.add("");
@@ -453,7 +454,7 @@ public class App extends Application {
                       rowFill.add(" "); // Serial Number
                       rowFill.add(" "); // DI
                       rowFill.add(partid.toString().replace(",", ""));
-                      rowFill.add("Instrument Receiving");
+                      rowFill.add("instrument recovery");
                       rowFill.add("Test and Development");
                       rowFill.add("");
                       rowFill.add("");

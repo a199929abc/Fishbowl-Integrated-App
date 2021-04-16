@@ -1,5 +1,7 @@
 import com.sun.xml.messaging.saaj.packaging.mime.MessagingException;
 import com.sun.xml.messaging.saaj.packaging.mime.internet.MimeUtility;
+import sun.net.idn.Punycode;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,6 +15,8 @@ import java.security.NoSuchAlgorithmException;
  * Date: 10/10/11
  */
 public class Requests {
+
+
 
     /**
      * Creates the LoginRq XML.
@@ -32,7 +36,6 @@ public class Requests {
                 "</LoginRq>" +
                 "</FbiMsgsRq>" +
                 "</FbiXml>";
-
         return xml;
     }
 
